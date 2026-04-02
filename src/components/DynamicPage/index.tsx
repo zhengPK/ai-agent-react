@@ -1,8 +1,7 @@
 import { useParams } from 'react-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, notification } from 'antd';
 import PageSpin from '../PageSpin';
-import { useMounted } from '../../uses/useMounted';
 
 export const DynamicPage = (props: { dirname: string }) => {
   const params = useParams();
@@ -14,37 +13,38 @@ export const DynamicPage = (props: { dirname: string }) => {
 
   const [Component, setComponent] = useState(null as null | ((props: any) => any));
 
-  useMounted(async () => {
+  useEffect(() => {
     if (!!routeName) {
       // console.log(`dynamic page: ${routeName}`);
-      try {
-        const PageComponent = await import(
-          '../../' + props.dirname + '/' + routeName + '-page'
-        ).then((val) => val.default);
-        console.log('路径', '../../' + props.dirname + '/' + routeName + '-page');
-        if (!PageComponent) {
-          notification.error({ message: 'Missing export default in page.' });
+      (async () => {
+        try {
+          const PageComponent = await import(
+            '../../' + props.dirname + '/' + routeName + '-page'
+          ).then((val) => val.default);
+          if (!PageComponent) {
+            notification.error({ message: 'Missing export default in page.' });
+          }
+          setComponent(() => PageComponent);
+        } catch (e) {
+          setComponent(() => {
+            return () => (
+              <div style={{ padding: '1em' }}>
+                <Alert type="error" message={`页面"${routeName}"不存在`} />
+              </div>
+            );
+          });
         }
-        setComponent(() => PageComponent);
-      } catch (e) {
-        setComponent(() => {
-          return () => (
-            <div style={{ padding: '1em' }}>
-              <Alert type="error" description={`页面"${routeName}"不存在`} />
-            </div>
-          );
-        });
-      }
+      })();
     } else {
       setComponent(() => {
         return () => (
           <div style={{ padding: '1em' }}>
-            <Alert type="error" description={`缺少动态路由参数！}`} />
+            <Alert type="error" message={`缺少动态路由参数！}`} />
           </div>
         );
       });
     }
-  });
+  }, [routeName, props.dirname]);
 
   return !Component ? <PageSpin /> : <Component {...(props as any)} />;
 };

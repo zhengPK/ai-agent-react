@@ -17,7 +17,8 @@ import env from '../AppService/env';
 import { getLocationInfo } from '../AppService/login';
 import { createTokenSaver } from '../AppService/createTokenSaver';
 import { router } from '../layouts/routes';
-
+// 不要走webpack打包
+// 但是这样导致无法自动刷新浏览器缓存，可以更改后面的路径来解决
 const logo = pathJoin(__webpack_public_path__, '/images/reimburse_logo.png');
 const backgroundImage = pathJoin(__webpack_public_path__, '/images/login_bg.png');
 

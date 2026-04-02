@@ -4,7 +4,6 @@ import { login } from "./login";
 import Axios from "axios";
 import env from "./env";
 
-// 无论多少个请求，只拿一次token
 export function createTokenService(tokenSaver: iTokenSaver) {
     const pureAxios = Axios.create({ baseURL: env.baseURL });
 
