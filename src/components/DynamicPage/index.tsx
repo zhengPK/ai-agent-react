@@ -1,5 +1,5 @@
 import { useParams } from 'react-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Alert, notification } from 'antd';
 import PageSpin from '../PageSpin';
 import { useMounted } from '../../uses/useMounted';
@@ -21,6 +21,7 @@ export const DynamicPage = (props: { dirname: string }) => {
         const PageComponent = await import(
           '../../' + props.dirname + '/' + routeName + '-page'
         ).then((val) => val.default);
+        console.log('路径', '../../' + props.dirname + '/' + routeName + '-page');
         if (!PageComponent) {
           notification.error({ message: 'Missing export default in page.' });
         }
@@ -29,7 +30,7 @@ export const DynamicPage = (props: { dirname: string }) => {
         setComponent(() => {
           return () => (
             <div style={{ padding: '1em' }}>
-              <Alert type="error" message={`页面"${routeName}"不存在`} />
+              <Alert type="error" description={`页面"${routeName}"不存在`} />
             </div>
           );
         });
@@ -38,7 +39,7 @@ export const DynamicPage = (props: { dirname: string }) => {
       setComponent(() => {
         return () => (
           <div style={{ padding: '1em' }}>
-            <Alert type="error" message={`缺少动态路由参数！}`} />
+            <Alert type="error" description={`缺少动态路由参数！}`} />
           </div>
         );
       });

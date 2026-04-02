@@ -34,6 +34,10 @@ const routes: RouteObject[] = [
     ),
   },
   {
+    path: '/login',
+    element: <Navigate to="/public/login-page" replace />,
+  },
+  {
     path: '*',
     element: (
       <div style={{ padding: '1em' }}>
@@ -45,7 +49,7 @@ const routes: RouteObject[] = [
 
 const publicPath = __webpack_public_path__;
 console.log(publicPath);
-const router = createBrowserRouter(routes, {
+export const router = createBrowserRouter(routes, {
   basename: publicPath.endsWith('/') ? publicPath.slice(0, -1) : publicPath,
 });
 
